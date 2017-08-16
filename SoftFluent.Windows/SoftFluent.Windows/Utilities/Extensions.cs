@@ -7,13 +7,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Markup.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace SoftFluent.Windows.Utilities
 {
-    internal static class Extensions
+    public static class Extensions
     {
         private const string _hexaChars = "0123456789ABCDEF";
 
@@ -555,6 +557,7 @@ namespace SoftFluent.Windows.Utilities
 
             return VisualTreeHelper.GetParent(source).GetVisualSelfOrParent<T>();
         }
+
         public static T FindFocusableVisualChild<T>(this DependencyObject obj, string name) where T : FrameworkElement
         {
             foreach (T item in obj.EnumerateVisualChildren(true, true).OfType<T>())
@@ -587,6 +590,36 @@ namespace SoftFluent.Windows.Utilities
                     }
                 }
             }
+        }
+
+        public static IEnumerable<Expander> EnumerateExpanders(this DataGrid grid)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+
+            foreach (var item in grid.EnumerateVisualChildren(true, true).OfType<GroupItem>())
+            {
+                var expander = item.FindVisualChild<Expander>(ex => true);
+                if (expander != null)
+                    yield return expander;
+            }
+        }
+
+        public static Expander GetExpander(this DataGrid grid, object groupName)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+
+            if (groupName == null)
+                throw new ArgumentNullException(nameof(groupName));
+
+            foreach (var expander in EnumerateExpanders(grid))
+            {
+                var group = expander.DataContext as CollectionViewGroup;
+                if (group != null && groupName.Equals(group.Name))
+                    return expander;
+            }
+            return null;
         }
 
         public static T GetSelfOrParent<T>(this FrameworkElement source) where T : FrameworkElement
