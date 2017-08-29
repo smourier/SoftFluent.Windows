@@ -98,7 +98,7 @@
         </Window>
 
         <DataTemplate x:Key="PercentEditor">
-            <Slider Orientation="Horizontal" IsSnapToTickEnabled="True"
+            <Slider ToolTip="{Binding TextValue}" Orientation="Horizontal" IsSnapToTickEnabled="True"
                     Value="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ChangeTypeConverter}, ConverterParameter={x:Type sys:Double}}"
                     Minimum="0"
                     Maximum="100"

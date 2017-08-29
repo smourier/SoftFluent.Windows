@@ -175,6 +175,7 @@ namespace SoftFluent.Windows.Samples
         }
 
         [Category("Dates and Times")]
+        [Description("This is the timespan tooltip")]
         public TimeSpan TimeSpan
         {
             get { return GetProperty<TimeSpan>(); }
